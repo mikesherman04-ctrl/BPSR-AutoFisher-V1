@@ -1,0 +1,224 @@
+# Fishing Bot - Installation Guide
+
+Automated fishing bot for Star.exe game with computer vision detection.
+
+## 📋 Prerequisites
+
+- **Windows 10/11** (required - uses Windows APIs)
+- **Python 3.8 or higher** ([Download here](https://www.python.org/downloads/))
+- **Administrator privileges** (for keyboard control)
+- **game** installed and configured
+
+## 🚀 Quick Start (Recommended)
+
+### Option 1: Automated Setup (Easiest)
+
+1. **Download** all project files to a folder
+2. **Right-click** `setup.bat` → **Run as administrator**
+3. Wait for installation to complete
+4. **Double-click** `run.bat` to start the bot
+
+That's it! The script will:
+- Create a virtual environment
+- Install all dependencies
+- Set up project structure
+- Create launch shortcuts
+
+### Option 2: Manual Setup
+
+```batch
+# 1. Create virtual environment
+python -m venv venv
+
+# 2. Activate it
+venv\Scripts\activate.bat
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Run the bot
+python main.py
+```
+
+## 📁 Project Structure
+
+```
+fishing-bot/
+├── main.py              # Main entry point
+├── config.py            # Configuration settings
+├── color_util.py        # Color detection utilities
+├── window_util.py       # Window management
+├── game_logic.py        # Game-specific logic
+├── utils.py             # Helper functions
+├── requirements.txt     # Python dependencies
+├── setup.bat            # Automated installer
+├── run.bat             # Quick launcher (created by setup)
+├── assets/             # Template images
+│   ├── add_rod.png
+│   └── water_left.png
+└── log/                # Screenshots and logs (auto-created)
+```
+
+## ⚙️ Configuration
+
+Edit `config.py` to customize behavior:
+
+### Essential Settings
+```python
+PROCESS_NAME = "BPSR_STEAM.exe"        # Your game process name
+CLICK_POS = (922, 380)                 # Casting position
+RED_THRESHOLD = 0.6                    # Red dot sensitivity
+START_DELAY = 5                        # Delay before detection
+```
+
+### Advanced Settings
+- **Red Dot Detection**: Adjust `RED_SEARCH_REGION_CENTER` for different fishing spots
+- **Timing**: Modify delays in the timing parameters section
+- **Debug Mode**: Set `DEBUG_MODE = True` for verbose logging
+
+## 🎮 Usage
+
+### Starting the Bot
+
+1. **Launch the game** (Star.exe) and get to fishing area
+2. **Run as Administrator**: Right-click `run.bat` → Run as administrator
+3. The bot will:
+   - Find the game window
+   - Start automated fishing
+   - Log activities to console
+
+### Controls
+
+- **ESC / ~ / Q / Ctrl**: Stop the bot at any time
+- Bot runs continuously until stopped
+
+### What the Bot Does
+
+1. ✅ Casts fishing rod
+2. ✅ Detects red bobber float
+3. ✅ Waits for fish to bite (white flash)
+4. ✅ Holds mouse button automatically
+5. ✅ Presses A/D keys to control fish
+6. ✅ Detects fishing completion
+7. ✅ Collects loot
+8. ✅ Replaces rod when durability runs out
+9. ✅ Repeats cycle
+
+## 🐛 Troubleshooting
+
+### "Python is not installed or not in PATH"
+- Install Python from [python.org](https://www.python.org/)
+- **Important**: Check "Add Python to PATH" during installation
+- Restart command prompt after installing
+
+### "Module not found" errors
+```batch
+# Reinstall dependencies
+venv\Scripts\activate.bat
+pip install --upgrade pip
+pip install -r requirements.txt --force-reinstall
+```
+
+### Keyboard module requires admin rights
+- Always run as Administrator
+- Right-click `run.bat` → Run as administrator
+
+### Bot can't find game window
+- Make sure `PROCESS_NAME` in `config.py` matches your game's process name
+- Check Task Manager → Details tab for exact process name
+- Game must be running before starting bot
+
+### Red dot not detected
+- Adjust `RED_SEARCH_REGION_CENTER` in config.py
+- Increase `RED_SEARCH_REGION_OFFSET` for larger search area
+- Lower `RED_THRESHOLD` for more sensitive detection
+- Enable `SAVE_ANNOTATED_SCREENSHOTS = True` to debug
+
+### Bot presses wrong keys
+- Adjust `CENTER_THRESHOLD` in config.py
+- Check that `POINT_A_POS` and `POINT_D_POS` are correct for your resolution
+
+## 🔍 Debug Mode
+
+Enable debugging in `config.py`:
+
+```python
+DEBUG_MODE = True
+SAVE_ANNOTATED_SCREENSHOTS = True
+CAPTURE_SCREENSHOT = True
+```
+
+This will:
+- Print detailed logs
+- Save screenshots to `log/` folder
+- Show detection regions on saved images
+
+## 📦 Dependencies
+
+- **opencv-python**: Computer vision and template matching
+- **numpy**: Numerical operations
+- **keyboard**: Keyboard event handling (needs admin)
+- **mss**: Fast screen capture
+- **pywin32**: Windows API access
+- **psutil**: Process management
+- **PyGetWindow**: Window control
+
+## 🔄 Updating
+
+```batch
+# Pull latest changes
+git pull
+
+# Update dependencies
+venv\Scripts\activate.bat
+pip install -r requirements.txt --upgrade
+```
+
+## 🧹 Maintenance
+
+### Clear old screenshots
+The bot auto-saves debug screenshots. To clean them:
+
+```python
+from utils import clear_old_screenshots
+clear_old_screenshots(days_to_keep=7)
+```
+
+Or manually delete files in `log/` folder.
+
+### Reset configuration
+Delete `config.py` and run setup again, or restore from backup.
+
+## ⚠️ Safety Notes
+
+- Bot requires admin rights for keyboard control
+- Only use on accounts you own
+- Game may detect automation - use at your own risk
+- Not responsible for bans or account issues
+
+## 📝 Advanced: Customization
+
+### Adding new fishing spots
+1. Capture screenshot while fishing
+2. Identify red bobber coordinates
+3. Update `RED_SEARCH_REGION_CENTER` in config.py
+
+### Adjusting for different resolutions
+All coordinates auto-scale from 1920x1080 base resolution.
+No manual adjustment needed.
+
+### Creating custom detection templates
+1. Capture clear screenshot of UI element
+2. Save as PNG in `assets/` folder
+3. Reference in code using `match_add_rod()` pattern
+
+## 🆘 Getting Help
+
+1. Check this guide first
+2. Enable debug mode to see what's happening
+3. Check `log/` folder for screenshots
+4. Review console output for errors
+
+## 📄 License
+
+This is an educational project. Use responsibly.
